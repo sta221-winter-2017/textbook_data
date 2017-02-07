@@ -51,7 +51,7 @@ bodyfat %>%
 bf_wt_lm <- lm(`Pct BF` ~ Weight, data = bodyfat)
 bf_wt_lm
 
-# To see more details (which we will need to do soon) use the following. Right now all we know about are the numbers in the "Estimate" column. 
+# To see more details use the following. Right now all we know about are the numbers in the "Estimate" column. 
 
 summary(bf_wt_lm)
 
@@ -72,3 +72,32 @@ bodyfat %>%
 
 bf_wt_lm <- bodyfat %>% 
   lm(`Pct BF` ~ Weight, data = .)
+
+## NEW 2017-02-06: Residual plots
+
+# A simple way to make the residual plots, except you have to be there to hit 
+# <enter> to see them one at a time. But, simple. Also, the plots I provide will
+# look a little different.
+
+plot(bf_wt_lm, which = 1:2)
+
+# Here's how I make the plots. It requies the broom package which is installed
+# as part of the tidyversy but not loaded by default. Load it now.
+
+library(broom)
+
+# First, make a data_frame with the data along with residuals, and some other
+# stuff we might see later on.
+
+bf_wt_lm_aug <- augment(bf_wt_lm)
+
+# Normal quantile plot of residuals
+bf_wt_lm_aug %>% 
+  ggplot(aes(sample = .resid)) + geom_qq()
+
+# Residuals versus fitted values
+bf_wt_lm_aug %>% 
+  ggplot(aes(x = .resid, y= .fitted)) + geom_point()
+
+
+
