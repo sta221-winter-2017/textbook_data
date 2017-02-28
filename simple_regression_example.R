@@ -82,7 +82,7 @@ bf_wt_lm <- bodyfat %>%
 plot(bf_wt_lm, which = 1:2)
 
 # Here's how I make the plots. It requies the broom package which is installed
-# as part of the tidyversy but not loaded by default. Load it now.
+# as part of the tidyverse but not loaded by default. Load it now.
 
 library(broom)
 
@@ -97,7 +97,7 @@ bf_wt_lm_aug %>%
 
 # Residuals versus fitted values
 bf_wt_lm_aug %>% 
-  ggplot(aes(x = .resid, y= .fitted)) + geom_point()
+  ggplot(aes(x= .fitted, y=.resid)) + geom_point()
 
 
 
