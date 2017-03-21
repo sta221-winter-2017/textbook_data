@@ -5,6 +5,7 @@
 # with levels. But, if the variable uses levels such as 1, 2, 3, etc., then R
 # will assume these are the numbers themselves, and not labels. So it's a good
 # habit to make sure factor variables are being stored properly.
+library(tidyverse)
 
 yeast <- read.csv("Chapter_25/Activating_yeast.csv", check.names = FALSE)
 
@@ -45,12 +46,17 @@ yeast_fit_aug <- augment(yeast_fit)
 yeast_fit_aug %>% 
   ggplot(aes(sample=.resid)) + geom_qq()
 
-# Equal variance assumption with residuals versus fitted values.
+# Equal variance assumption with residuals versus fitted values, as per textbook.
 yeast_fit_aug %>% 
   ggplot(aes(x=.fitted, y=.resid)) + geom_point()
 
-# Also look at the table of standard deviations above.
+# Better way, in my opinion. Levene's test. Implemented as part of the "car"
+# package, which you'll need to install (only once.)
+ 
+library(car)
 
+yeast %>% 
+  leveneTest(`Activation Times` ~ Recipe, data=.)
 
 ##########################################
 # Example with confusing factor variable #
@@ -77,8 +83,8 @@ fuel %>%
   group_by(Cylinders) %>% 
   summarize(n = n(), means = mean(`Fuel Efficiency (mpg)`), sd = sd(`Fuel Efficiency (mpg)`))
 
-# Hmmm...sample size of only 1 for 5 cylinders. That won't work. I don't 
-# actually see a question on this dataset in our version of the textbook. Also, 
-# this is an unbalanced dataset and the group standard deviations aren't very
-# close. Best not to proceed with an ANOVA.
-
+# Hmmm...sample size of only 1 for 5 cylinders. You won't be able to use that 
+# group in any analysis. I don't actually see a question on this dataset in our 
+# version of the textbook, so don't worry about. The main thing is to watch out
+# for the correct interpretation of factor variables when the levels are stored
+# as numbers.
